@@ -63,8 +63,6 @@ const editServicio = (servicio) => {
 
 const saveServicio = () => {
   if (isEditing.value) {
-    // Para no usar indexOf con objetos complejos (ni computed variables), 
-    // lo hacemos con un for o un findIndex simple.
     let index = -1
     for(let i = 0; i < servicios.value.length; i++) {
       if(servicios.value[i].id === currentId.value) {
@@ -90,7 +88,6 @@ const askDelete = (id) => {
 }
 
 const deleteServicio = () => {
-  // Sin usar computed, usamos filter y reasignamos el ref.
   let nuevosServicios = []
   for (let i = 0; i < servicios.value.length; i++) {
     if (servicios.value[i].id !== confirmDeleteId.value) {
@@ -101,7 +98,6 @@ const deleteServicio = () => {
   isDeleteModalOpen.value = false
 }
 
-// Helpers lógicos invocados desde el template
 const getPaymentColor = (estado) => {
   if (estado === 'Pagado') return 'positive'
   if (estado === 'Pendiente') return 'negative'
@@ -125,7 +121,6 @@ const getEquipmentColor = (estado) => {
   return 'grey'
 }
 
-// Reglas de validación para los q-input
 const requiredRule = val => !!val || 'Este campo es requerido'
 const priceRule = val => (val !== null && val !== '') || 'Debe ingresar un precio'
 
@@ -152,7 +147,6 @@ const priceRule = val => (val !== null && val !== '') || 'Debe ingresar un preci
 
         <div class="row q-col-gutter-md">
           <div class="col-12 col-md-6 col-lg-4" v-for="servicio in servicios" :key="servicio.id">
-            <!-- Marcamos la tarjeta roja si entregamos el equipo pero no ha pagado completo -->
             <q-card bordered class="q-mb-md" :class="{'bg-red-1': (servicio.estadoPago === 'Pendiente' || servicio.estadoPago === 'Abono') && servicio.estadoEquipo === 'Entregado'}">
               <q-card-section>
                 <div class="text-h6">{{ servicio.cliente }}</div>
@@ -205,12 +199,10 @@ const priceRule = val => (val !== null && val !== '') || 'Debe ingresar un preci
           </div>
         </div>
 
-        <!-- Botón Flotante para Agregar -->
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-btn fab icon="add" color="primary" @click="openModal" />
         </q-page-sticky>
 
-        <!-- Formulario Modal -->
         <q-dialog v-model="isModalOpen" persistent>
           <q-card style="width: 100%; max-width: 600px;">
             <q-form @submit="saveServicio">
@@ -239,7 +231,6 @@ const priceRule = val => (val !== null && val !== '') || 'Debe ingresar un preci
                 <q-select outlined v-model="form.estadoPago" :options="estadosPago" label="Estado del pago *" :rules="[requiredRule]" />
                 <q-select outlined v-model="form.estadoEquipo" :options="estadosEquipo" label="Estado del equipo *" :rules="[requiredRule]" />
                 
-                <!-- Sólo si ya se va a entregar y calificar -->
                 <div v-show="form.estadoEquipo === 'Entregado'" class="q-mt-md">
                   <div class="text-subtitle2 q-mb-sm text-grey-8">Calificación del cliente</div>
                   <q-rating v-model="form.calificacion" size="2em" :max="5" color="orange" />
@@ -257,7 +248,6 @@ const priceRule = val => (val !== null && val !== '') || 'Debe ingresar un preci
           </q-card>
         </q-dialog>
 
-        <!-- Modal Confirmación Eliminar -->
         <q-dialog v-model="isDeleteModalOpen">
           <q-card>
             <q-card-section class="row items-center">
@@ -278,5 +268,4 @@ const priceRule = val => (val !== null && val !== '') || 'Debe ingresar un preci
 </template>
 
 <style scoped>
-/* Ningún estilo complejo adicional, usamos las clases de Quasar */
 </style>
